@@ -1,12 +1,25 @@
-{% extends 'main.html' %}
-
-{% block content %}
+{% extends 'main.html' %} {% block content %}
 
 <h1>Projects</h1>
-<p>
-  Lorem ipsum dolor, sit amet consectetur adipisicing elit. Officiis qui
-  ducimus, asperiores animi architecto laboriosam officia voluptas quisquam
-  porro facere, rem sequi ut quos, saepe harum doloribus iste. Porro, omnis!
-</p>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Project</th>
+    <th>Positive Votes</th>
+    <th>Votes</th>
+    <th></th>
+  </tr>
+  {% for project in projects %}
+  <tr>
+    <td>{{project.id}}</td>
+    <td>{{project.title}}</td>
+    <td>{{project.vote_ratio}}%</td>
+    <td>{{project.vote_total}}</td>
+    <td>{{project.created_at}}</td>
+    <td><a href="{% url 'single-project' project.id %}">View</a></td>
+  </tr>
+  {% endfor %}
+</table>
 
 {% endblock content %}
