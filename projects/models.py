@@ -14,6 +14,11 @@ class Project(models.Model):
     description = models.TextField(null=True, blank=True)
     # Blank means we can submit a field that is empty
 
+    featured_image = models.ImageField(null=True, blank=True, default='default.jpg')
+    """ Uses the default image from the static folder until we modify it
+    For this, we're using Pillow, which is a Python Imaging Library
+    """
+
     demo_link = models.CharField(max_length=2000, null=True, blank=True)
     source_link = models.CharField(max_length=2000, null=True, blank=True)
 
