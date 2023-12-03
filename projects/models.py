@@ -1,5 +1,6 @@
 from django.db import models
 import uuid
+from users.models import Profile
 
 # Inherits from Django Models
 
@@ -9,6 +10,11 @@ class Project(models.Model):
         default=uuid.uuid4, unique=True, primary_key=True, editable=False
     )
     # Overwrites the default pk
+
+    """ Many-to-One relationship can be defined by ForeignKey
+    On delete, if the owner is deleted, set the owner to null
+    """
+    owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
 
     title = models.CharField(max_length=200)
     description = models.TextField(null=True, blank=True)
