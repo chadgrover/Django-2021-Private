@@ -35,7 +35,7 @@ class Profile(models.Model):
     )
 
     def __str__(self):
-        return str(self.user.username)
+        return str(self.username)
 
 
 class Skill(models.Model):
@@ -43,7 +43,10 @@ class Skill(models.Model):
     name = models.CharField(max_length=200, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False, unique=True)
+    id = models.UUIDField(
+        default=uuid.uuid4, primary_key=True, editable=False, unique=True
+    )
 
     def __str__(self):
         return str(self.name)
+
