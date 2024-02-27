@@ -1,7 +1,6 @@
 {% extends 'main.html' %}
 {% block content %}
 
-
 <!-- Main Section -->
 <main class="profile my-md">
   <div class="container">
@@ -16,7 +15,12 @@
             <h2 class="dev__name">{{account.name}}</h2>
             <p class="dev__title">{{account.headline}}</p>
             <p class="dev__location">Based in {{account.location}}</p>
-
+            <br />
+            <a
+              class="tag tag--pill tag--main settings__btn"
+              href="{% url 'edit-account' %}"
+              >Edit Profile</a
+            >
             <ul class="dev__social">
               {% if profile.social_github %}
               <li>
@@ -27,8 +31,7 @@
                   ><i class="im im-github"></i
                 ></a>
               </li>
-              {% endif %}
-              {% if profile.social_twitter %}
+              {% endif %} {% if profile.social_twitter %}
               <li>
                 <a
                   title="Twitter"
@@ -37,8 +40,7 @@
                   ><i class="im im-twitter"></i
                 ></a>
               </li>
-              {% endif %}
-              {% if profile.social_linkedin %}
+              {% endif %} {% if profile.social_linkedin %}
               <li>
                 <a
                   title="LinkedIn"
@@ -47,8 +49,7 @@
                   ><i class="im im-linkedin"></i
                 ></a>
               </li>
-              {% endif %}
-              {% if profile.social_website %}
+              {% endif %} {% if profile.social_website %}
               <li>
                 <a
                   title="Personal Website"
@@ -69,13 +70,30 @@
         </div>
         <div class="devInfo">
           <h3 class="devInfo__title">Skills</h3>
+          <a
+            class="tag tag--pill tag--sub settings__btn tag--lg"
+            href="{% url 'create-skill' %}"
+          >
+            <i class="im im-plus">Add Skill</i>
+          </a>
           <div class="devInfo__skills">
             {% for skill in skills %}
             <div class="devSkill">
               <h4 class="devSkill__title">{{skill.name}}</h4>
-              <p class="devSkill__info">
-                {{skill.description}}
-              </p>
+              <p class="devSkill__info">{{skill.description}}</p>
+              <a
+                class="tag tag--pill tag--main"
+                href="{% url 'update-skill' skill.id %}"
+              >
+                <i class="im">Update</i>
+              </a>
+              <a
+              class="tag tag--pill tag--main"
+              
+              href="{% url 'delete-skill' skill.id %}?next=/account"
+            >
+              <i class="im">Delete</i>
+            </a>
             </div>
             {% endfor %}
           </div>
@@ -83,6 +101,11 @@
 
         <div class="devInfo">
           <h3 class="devInfo__title">Projects</h3>
+          <a
+            class="tag tag--pill tag--sub settings__btn tag--lg"
+            href="{% url 'create-project' %}"
+            ><i class="im im-plus">Create Project</i></a
+          >
           <div class="grid grid--two">
             {% for project in projects %}
             <div class="column">
@@ -97,27 +120,45 @@
                     <h3 class="project__title">{{project.title}}</h3>
                     <p>{{project.description|slice:"150"}}</p>
                     <p>
-                      <a class="project__author" href="{% url 'user-profile' project.owner.id %}"
+                      <a
+                        class="project__author"
+                        href="{% url 'user-profile' project.owner.id %}"
                         >{{project.owner.name}}</a
                       >
                     </p>
                     <p class="project--rating">
-                      <span style="font-weight: bold">{{project.vote_ratio}}%</span> Positive
-                      Feedback ({{project.vote_total}} Vote{{project.vote_total|pluralize:"s"}})
+                      <span style="font-weight: bold"
+                        >{{project.vote_ratio}}%</span
+                      >
+                      Positive Feedback ({{project.vote_total}}
+                      Vote{{project.vote_total|pluralize:"s"}})
                     </p>
                     <div class="project__tags">
+                      {% if project.tags.all %}
+                      <small>Tags:</small>
                       {% for tag in project.tags.all %}
                       <span class="tag tag--pill tag--main">
                         <small>{{tag.name}}</small>
                       </span>
-                      {% endfor %}
+                      {% endfor %} {% endif %}
+                    </div>
+                    <div>
+                      <a
+                        class="tag tag--pill tag--main settings__btn"
+                        href="{% url 'update-project' project.id %}"
+                        >Edit Project</a
+                      >
+                      <a
+                        class="tag tag--pill tag--main settings__btn"
+                        href="{% url 'delete-project' project.id %}?next=/account"
+                        >Delete Project</a
+                      >
                     </div>
                   </div>
                 </a>
               </div>
             </div>
             {% endfor %}
-            
           </div>
         </div>
       </div>
@@ -126,4 +167,3 @@
 </main>
 
 {% endblock %}
-
