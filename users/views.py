@@ -5,7 +5,7 @@ from .forms import CustomUserCreationForm as UserCreationForm
 from .forms import ProfileForm, SkillForm
 from django.contrib.auth.models import User
 from .models import Profile
-from .utils import search_profiles
+from .utils import search_profiles, paginate_profiles
 
 # Q is used for complex queries like OR and AND
 from django.db.models import Q
@@ -75,7 +75,9 @@ def register_user(request):
 def profiles(request):
     profiles, search_query = search_profiles(request)
 
-    context = {"profiles": profiles, "search_query": search_query}
+    custom_range, profiles = paginate_profiles(request, profiles, 6)
+
+    context = {"profiles": profiles, "search_query": search_query, "custom_range": custom_range}
 
     return render(request, "users/profiles.html", context)
 

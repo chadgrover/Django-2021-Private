@@ -1,4 +1,5 @@
-{% extends 'main.html' %} {% block content %}
+{% extends 'main.html' %}
+{% block content %}
 
 <!-- Main Section -->
 <main class="projects">
@@ -76,6 +77,9 @@
       </div>
     </div>
   </section>
+
+  {% include 'pagination.html' with queryset=projects custom_range=custom_range %}
+
 </main>
 
 {% endblock content %}

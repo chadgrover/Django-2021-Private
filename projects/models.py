@@ -38,6 +38,11 @@ class Project(models.Model):
     # Outputs the title value in Django's admin panel
     def __str__(self):
         return self.title
+    
+    class Meta:
+        # Used to change the ordering of the projects in the admin panel
+        ordering = ['-created_at']
+    
 
 
 class Review(models.Model):

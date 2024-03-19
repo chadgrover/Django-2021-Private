@@ -1,23 +1,23 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .models import Project, Tag
-from .forms import ProjectForm
 from django.contrib.auth.decorators import login_required
-from .utils import search_projects
+from .models import Project
+from .forms import ProjectForm
+from .utils import search_projects, paginate_projects
 
 def projects(request):
     projects_list, search_query = search_projects(request)
 
-    context = {"projects": projects_list, "search_query": search_query}
+    custom_range, projects_list = paginate_projects(request, projects_list, 3)
+
+    context = {"projects": projects_list, "search_query": search_query, "custom_range": custom_range}
 
     return render(request, "projects/projects.html", context)
 
 
 def project(request, pk):
-    projectObj = Project.objects.get(id=pk)
-    tags = projectObj.tags.all()
+    project_obj = Project.objects.get(id=pk)
 
-    return render(request, "projects/single-project.html", {"project": projectObj})
+    return render(request, "projects/single-project.html", {"project": project_obj})
 
 
 @login_required(login_url="login")
