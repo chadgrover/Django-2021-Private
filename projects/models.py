@@ -40,14 +40,34 @@ class Project(models.Model):
         return self.title
     
     class Meta:
-        # Used to change the ordering of the projects in the admin panel
-        ordering = ['-created_at']
+        # Used to change the ordering of the projects in the admin panel and the website
+        ordering = ['-vote_ratio', '-vote_total', 'title']
+
+    @property
+    def reviewers(self):
+        # Get a list of IDs of all the reviewers
+        queryset = self.review_set.all().values_list('owner__id', flat=True)
+        return queryset
+
+    @property
+    def get_vote_count(self):
+        reviews = self.review_set.all()
+        up_votes = reviews.filter(value='up').count()
+        total_votes = reviews.count()
+
+        result = (up_votes / total_votes) * 100
+        self.vote_total = total_votes
+        self.vote_ratio = result
+        self.save()
+
+        return result
     
 
 
 class Review(models.Model):
     VOTE_TYPE = (("up", "Up Vote"), ("down", "Down Vote"))
-    # owner =
+
+    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, null=True,)
 
     # Delete all of the reviews if a parent project is deleted
     id = models.UUIDField(
@@ -57,6 +77,10 @@ class Review(models.Model):
     body = models.TextField(null=True, blank=True)
     value = models.CharField(choices=VOTE_TYPE, max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        # No instance of a review can have the same owner and project
+        unique_together = ["owner", "project",]
 
     def __str__(self):
         return self.value

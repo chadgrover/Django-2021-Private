@@ -61,10 +61,11 @@
           {% elif request.user.is_authenticated %}
           <form
             class="form"
-            action="{% url 'project' project.id %}"
+            action="{% url 'single-project' project.id %}"
             method="POST"
           >
-            {% csrf_token %} {% for field in form %}
+            {% csrf_token %}
+            {% for field in form %}
             <div class="form__field">
               <label for="formInput#textarea">{{field.label}}</label>
               {{field}}
@@ -83,7 +84,8 @@
           {% endif %}
 
           <div class="commentList">
-            {% for review in project.review_set.all %} {% if review.body %}
+            {% for review in project.review_set.all %}
+            {% if review.body %}
             <div class="comment">
               <a href="{% url 'user-profile' review.owner.id  %}">
                 <img
@@ -92,7 +94,7 @@
                   alt="user"
                 />
               </a>
-
+              
               <div class="comment__details">
                 <a
                   href="{% url 'user-profile' review.owner.id  %}"
@@ -102,7 +104,8 @@
                 <p class="comment__info">{{review.body|linebreaksbr}}</p>
               </div>
             </div>
-            {% endif %} {% endfor %}
+            {% endif %}
+            {% endfor %}
           </div>
         </div>
       </div>
