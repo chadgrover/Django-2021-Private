@@ -2,9 +2,9 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.decorators import login_required
 from .forms import CustomUserCreationForm as UserCreationForm
-from .forms import ProfileForm, SkillForm
+from .forms import ProfileForm, SkillForm, MessageForm
 from django.contrib.auth.models import User
-from .models import Profile
+from .models import Profile, Message
 from .utils import search_profiles, paginate_profiles
 
 # Q is used for complex queries like OR and AND
@@ -176,3 +176,59 @@ def delete_skill(request, pk):
 
     context = {'object': skill}
     return render(request, "delete_template.html", context)
+
+@login_required(login_url="login")
+def inbox(request):
+    user_profile = request.user.profile
+    # Can access messages via the related name
+    message_requests = user_profile.messages.all()
+    unread_count = message_requests.filter(is_read=False).count()
+    context = {"message_requests": message_requests, "unread_count": unread_count,}
+
+    return render(request, "users/inbox.html", context)
+
+@login_required(login_url="login")
+def view_message(request, pk):
+    profile = request.user.profile
+    # Get the message using the related name
+    specified_message = profile.messages.get(id=pk)
+    
+    if specified_message.is_read == False:
+        specified_message.is_read = True
+        specified_message.save()
+
+    context = {'message': specified_message}
+    return render(request, "users/message.html", context)
+
+def create_message(request, pk):
+    recipient = Profile.objects.get(id=pk)
+    form = MessageForm()
+
+    try:
+        sender = request.user.profile
+    except:
+        sender = None
+
+    if request.method == "POST":
+        form = MessageForm(request.POST)
+        
+        # If the data in the form is valid
+        if form.is_valid():
+            # Commit is false so we can modify the message before final save
+            message = form.save(commit=False)
+            message.sender = sender
+            message.recipient = recipient
+
+            if sender:
+                message.name = sender.name
+                message.email = sender.email
+
+            message.save()
+
+            messages.success(request, "Your message was sent successfully!")
+            return redirect("user-profile", pk=recipient.id)
+
+
+    context = {'recipient': recipient, 'form': form}
+
+    return render(request, "users/message-form.html", context)
