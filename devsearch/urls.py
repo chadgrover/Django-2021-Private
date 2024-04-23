@@ -9,6 +9,9 @@ urlpatterns = [
     path('projects/', include('projects.urls')),
     path('', include('users.urls')),
 
+    # Django REST Framework paths
+    path('api/', include('api.urls')),
+
     # Password reset paths (Note: email backend must be configured in settings.py for this to work.)
     
     # Setting the template names allows us to use our own custom templates for the password reset process.

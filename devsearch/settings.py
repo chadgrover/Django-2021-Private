@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     # Local apps
     'projects.apps.ProjectsConfig',
     'users.apps.UsersConfig',
+
+    # Third party apps
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
