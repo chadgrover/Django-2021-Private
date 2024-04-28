@@ -1,0 +1,1 @@
+This folder is only used to demonstrate how to connect a JavaScript frontend to a Django backend.

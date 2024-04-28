@@ -46,6 +46,7 @@ INSTALLED_APPS = [
 
     # Third party apps
     'rest_framework',
+    'corsheaders',
 ]
 
 # Simple JWT Authentication
@@ -98,6 +99,7 @@ SIMPLE_JWT = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware', # Corsheaders for CORS
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -173,6 +175,10 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+# CORS Headers for an open API
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Email configuration
 

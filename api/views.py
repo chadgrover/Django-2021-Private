@@ -21,7 +21,7 @@ def get_routes(request):
 
 
 @api_view(["GET"])
-@permission_classes([IsAuthenticated])
+
 def get_projects(request):
     projects = Project.objects.all()
     # Many property is set to True because we are serializing multiple objects.
